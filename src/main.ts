@@ -19,7 +19,13 @@ function triggerGlitch() {
   glitch.classList.add('go');
 }
 const bootDelay = reducedMotion.matches ? 0 : 1250;
-window.setTimeout(() => {
+// The entry gate resolves this on the visitor's first click; everything timed from the boot waits for it.
+let enter!: () => void;
+const entered = new Promise<void>((resolve) => { enter = resolve; });
+function afterEntry(fn: () => void, delay: number) {
+  void entered.then(() => window.setTimeout(fn, delay));
+}
+afterEntry(() => {
   body.classList.remove('is-booting');
   body.classList.add('is-ready');
   triggerGlitch();
@@ -66,7 +72,7 @@ function setRound(next: number) {
     triggerGlitch();
   }
 }
-window.setTimeout(() => setRound(1), bootDelay + 300);
+afterEntry(() => setRound(1), bootDelay + 300);
 
 // Step tallies count 1, 2, 3 and draw themselves when revealed.
 document.querySelectorAll<SVGSVGElement>('.step-tally .tally').forEach((svg, i) => {
@@ -91,7 +97,7 @@ const roundObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting && body.classList.contains('is-ready')) setRound(Number((entry.target as HTMLElement).dataset['round']));
   }
 }, { threshold: 0.35 });
-window.setTimeout(() => {
+afterEntry(() => {
   document.querySelectorAll('[data-round]').forEach((el) => roundObserver.observe(el));
 }, bootDelay + 400);
 
@@ -131,7 +137,7 @@ if (finePointer.matches && !reducedMotion.matches) {
       frame = 0;
     });
   }, { passive: true });
-  window.setTimeout(() => body.classList.add('has-pointer'), bootDelay + 800);
+  afterEntry(() => body.classList.add('has-pointer'), bootDelay + 800);
 
   document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
     card.addEventListener('pointermove', (event) => {
@@ -302,8 +308,9 @@ if (videoUrl && !reducedMotion.matches && !connection?.saveData) {
 }
 
 /* ───────── Background music ───────── */
-// Browsers block audio with sound until the visitor interacts, so playback starts on the first gesture
-// unless they muted it before. The choice is remembered across visits.
+// Music is on by default. Browsers block audio with sound until the visitor interacts, so if the
+// immediate attempt is refused it starts on the first gesture. The choice is remembered across visits.
+// The icon always mirrors what the audio element is really doing, never just the stored preference.
 const music = document.querySelector<HTMLAudioElement>('#bg-music')!;
 const musicToggle = document.querySelector<HTMLButtonElement>('#music-toggle')!;
 const MUSIC_KEY = 'zeroed-music-v2';
@@ -320,14 +327,14 @@ function fadeMusic(target: number, onDone?: () => void) {
     if (music.volume === target) { window.clearInterval(musicFade); onDone?.(); }
   }, 60);
 }
-// Shows the visitor's choice, so it reads as on even while the browser waits for a gesture.
+function musicIsOn() { return musicWanted && !music.paused; }
 function renderMusic() {
-  const on = musicWanted;
+  const on = musicIsOn();
   musicToggle.setAttribute('aria-pressed', String(on));
   musicToggle.setAttribute('aria-label', on ? 'Silenciar música de fondo' : 'Activar música de fondo');
 }
 function playMusic() {
-  music.volume = 0;
+  if (music.paused) music.volume = 0;
   return music.play().then(() => { fadeMusic(MUSIC_VOLUME); renderMusic(); }).catch(() => renderMusic());
 }
 function stopMusic() {
@@ -340,25 +347,53 @@ function rememberMusic(on: boolean) {
 }
 
 music.addEventListener('error', () => { musicToggle.hidden = true; });
+['play', 'playing', 'pause', 'ended', 'emptied'].forEach((name) => music.addEventListener(name, renderMusic));
 musicToggle.hidden = false;
 renderMusic();
 musicToggle.addEventListener('click', () => {
-  // Still blocked by the browser: this click is the gesture that starts it.
-  if (musicWanted && music.paused) { void playMusic(); return; }
-  rememberMusic(!musicWanted);
-  if (musicWanted) void playMusic(); else stopMusic();
+  if (musicIsOn()) { rememberMusic(false); stopMusic(); return; }
+  rememberMusic(true);
+  void playMusic();
 });
 if (musicWanted) {
-  // Try to start immediately; if the browser blocks it, the first gesture below starts it instead.
+  // Try to start immediately; if the browser blocks it, the first accepted gesture starts it instead.
   void playMusic();
-  const gestures = ['pointerdown', 'keydown', 'touchend'] as const;
+  const gestures = ['pointerdown', 'pointerup', 'mousedown', 'click', 'keydown', 'touchend'] as const;
   const unlock = (event: Event) => {
     // The toggle's own click handler deals with gestures on it.
     if (event.target instanceof Node && musicToggle.contains(event.target)) return;
-    gestures.forEach((name) => window.removeEventListener(name, unlock));
-    if (musicWanted && music.paused) void playMusic();
+    if (!musicWanted) { gestures.forEach((name) => window.removeEventListener(name, unlock)); return; }
+    if (!music.paused) return;
+    // Keep listening until playback really starts: not every event counts as a gesture for the browser.
+    void playMusic().then(() => {
+      if (!music.paused) gestures.forEach((name) => window.removeEventListener(name, unlock));
+    });
   };
   gestures.forEach((name) => window.addEventListener(name, unlock));
+}
+
+/* ───────── Entry gate ───────── */
+// The click on the gate is the gesture that lets the music start with sound. Visitors who muted it
+// from the header toggle skip the gate, since there is nothing to unlock.
+const gate = document.getElementById('gate')!;
+const gateEnter = document.getElementById('gate-enter')!;
+const behindGate = document.querySelectorAll<HTMLElement>('.header, main, footer');
+function openGate() {
+  behindGate.forEach((el) => { el.inert = false; });
+  body.classList.remove('is-gated');
+  enter();
+}
+if (musicWanted) {
+  behindGate.forEach((el) => { el.inert = true; });
+  gateEnter.focus({ preventScroll: true });
+  gateEnter.addEventListener('click', () => {
+    rememberMusic(true);
+    void playMusic();
+    openGate();
+  });
+} else {
+  gate.hidden = true;
+  openGate();
 }
 // Don't keep playing in a background tab.
 let resumeMusic = false;

@@ -75,7 +75,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--blood-hi); outl
 /* ───────── Boot ───────── */
 .boot { display: none; }
 .js .boot { position: fixed; inset: 0; z-index: 100; display: grid; place-content: center; justify-items: center; gap: 18px; background: #050403; pointer-events: none; transition: opacity .6s ease .1s, visibility 0s .7s; }
-.boot p { margin: 0; font: 22px var(--type); letter-spacing: .35em; color: var(--blood-hi); text-shadow: 0 0 18px #ff1a1a99; opacity: 0; animation: bootText 1.4s ease .5s forwards; }
+.boot p { margin: 0; padding-left: .35em; font: 22px var(--type); letter-spacing: .35em; color: var(--blood-hi); text-shadow: 0 0 18px #ff1a1a99; opacity: 0; animation: bootText 1.4s ease .5s forwards; }
 .boot-tally { width: 40px; height: 90px; }
 .boot-tally path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .55s cubic-bezier(.6,0,.4,1) .15s forwards; }
 body:not(.is-booting) .boot { opacity: 0; visibility: hidden; }
@@ -294,9 +294,28 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
   .scanlines { display: none; }
 }
 
+/* ───────── Entry gate (first gesture, so the music can start with sound) ───────── */
+.gate { display: none; }
+.js .gate { position: fixed; inset: 0; z-index: 101; display: flex; padding: 24px; overflow-y: auto; background: #050403; transition: opacity .5s ease, visibility 0s .5s; }
+.gate::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse 55% 45% at 50% 55%, #8a0f1347, transparent 70%), radial-gradient(ellipse 40% 30% at 72% 30%, #ff5a1f1f, transparent 70%); }
+.gate::after { content: ''; position: fixed; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, #00000033 0 1px, transparent 1px 3px), radial-gradient(ellipse 120% 90% at 50% 45%, transparent 50%, #000000cc 100%); }
+.gate-inner { position: relative; z-index: 1; margin: auto; display: grid; justify-items: center; text-align: center; gap: 0; max-width: 520px; }
+.gate .eyebrow { margin-bottom: 14px; padding-left: .14em; }
+.gate-title { font: 400 clamp(56px, min(16vw, 18vh), 150px)/.9 var(--display); letter-spacing: .08em; margin: 0 0 36px; padding-left: .08em; color: var(--blood); text-transform: uppercase;
+  background: linear-gradient(180deg, var(--blood-hi) 0%, var(--blood) 55%, var(--blood-deep) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px #ff1a1a55); animation: neon 6s 1s infinite; }
+.gate .cta { gap: 16px; justify-content: center; min-width: 240px; padding-inline: 34px; }
+.gate-icon { flex: none; width: 22px; height: 22px; fill: currentColor; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.gate-icon path + path { fill: none; }
+body:not(.is-gated) .gate { opacity: 0; visibility: hidden; pointer-events: none; }
+body.is-gated { overflow: hidden; }
+.is-gated .boot * { animation-play-state: paused; }
+@media (max-width: 720px) {
+  .gate .cta { width: 100%; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; transition-delay: 0s !important; }
-  .fog, .grain, .vignette, .tape-track, .blink, .edition i, .card-icon .flame, .blood { animation: none !important; }
+  .fog, .grain, .vignette, .gate-title, .tape-track, .blink, .edition i, .card-icon .flame, .blood { animation: none !important; }
   .flashlight { display: none; }
 }

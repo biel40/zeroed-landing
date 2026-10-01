@@ -15,7 +15,7 @@
   <title>Beta cerrada | Zeroed</title>
   <script>document.documentElement.classList.add('js');</script>
 </head>
-<body class="is-booting">
+<body class="is-booting is-gated">
   <div class="backdrop" aria-hidden="true">
     <img id="background-poster" class="background-media" alt="" hidden />
     <video id="background-video" class="background-media" muted loop playsinline preload="none" hidden></video>
@@ -33,6 +33,16 @@
   <div class="boot" aria-hidden="true">
     <svg class="tally boot-tally" viewBox="0 0 60 120"><path pathLength="1" d="M30 8 C26 40 33 78 28 112" /></svg>
     <p>RONDA 1</p>
+  </div>
+  <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="gate-inner">
+      <p class="eyebrow type"><span class="blink" aria-hidden="true"></span> EXPEDIENTE 115</p>
+      <h2 id="gate-title" class="gate-title">ZEROED</h2>
+      <button id="gate-enter" class="cta" type="button" data-points="100">
+        <span class="cta-label">ENTRAR</span>
+        <svg class="gate-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
+      </button>
+    </div>
   </div>
   <div id="points-layer" aria-hidden="true"></div>
 
