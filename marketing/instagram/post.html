@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Zeroed · Post IG beta cerrada</title>
+<style>
+  @font-face { font-family: 'Anton'; src: url('../../node_modules/@fontsource/anton/files/anton-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Special Elite'; src: url('../../node_modules/@fontsource/special-elite/files/special-elite-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Barlow'; font-weight: 500; src: url('../../node_modules/@fontsource/barlow/files/barlow-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Barlow'; font-weight: 700; src: url('../../node_modules/@fontsource/barlow/files/barlow-latin-700-normal.woff2') format('woff2'); }
+  :root {
+    --ink: #0a0806; --bone: #ece3cf; --bone-dim: #b9ae99; --ash: #857a68;
+    --blood: #c4161c; --blood-hi: #ff2a2a; --blood-deep: #6e0a0d; --gold: #ffd23f; --line: #ece3cf22;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1080px; height: 1350px; overflow: hidden; background: var(--ink); }
+  .post {
+    position: relative; width: 1080px; height: 1350px; padding: 84px 84px 80px;
+    color: var(--bone); font-family: 'Barlow', sans-serif;
+    background:
+      radial-gradient(ellipse 70% 45% at 72% 38%, #6e0a0d88, transparent 70%),
+      radial-gradient(ellipse 90% 60% at 50% 110%, #c4161c33, transparent 70%),
+      radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, #000 100%),
+      var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .noise { position: absolute; inset: 0; opacity: .09; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .scan { position: absolute; inset: 0; pointer-events: none; opacity: .35;
+    background: repeating-linear-gradient(0deg, #0000 0 3px, #00000055 3px 4px); }
+
+  header { position: relative; display: flex; justify-content: space-between; align-items: center; }
+  .wordmark { font: 400 64px/1 'Anton', sans-serif; letter-spacing: .06em; position: relative; }
+  .wordmark { text-shadow: -3px 0 0 #ff2a2a99, 3px 0 0 #4ff0ff44; }
+  .edition { display: flex; align-items: center; gap: 14px; font: 22px 'Special Elite', monospace; letter-spacing: .2em; color: var(--bone-dim);
+    border: 1px solid #ece3cf33; padding: 14px 20px; }
+  .edition i { width: 12px; height: 12px; border-radius: 50%; background: var(--blood-hi); box-shadow: 0 0 14px var(--blood-hi); }
+
+  .eyebrow { position: relative; margin: 170px 0 0; font: 25px 'Special Elite', monospace; letter-spacing: .14em; color: var(--bone-dim); display: flex; align-items: center; gap: 16px; }
+  .eyebrow::before { content: ''; width: 14px; height: 26px; background: var(--blood-hi); }
+
+  h1 { position: relative; margin: 34px 0 0; font: 400 196px/.9 'Anton', sans-serif; letter-spacing: .005em; text-transform: uppercase; }
+  h1 span { display: block; }
+  h1 em { font-style: normal; color: var(--blood); position: relative; display: inline-block; text-shadow: 0 0 60px #c4161c66; }
+  .drip { position: absolute; top: 82%; width: 20px; border-radius: 0 0 12px 12px; background: linear-gradient(var(--blood), #a50f14); }
+  .drip::after { content: ''; position: absolute; left: 50%; bottom: -10px; width: 26px; height: 26px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; transform: translateX(-50%); background: #a50f14; }
+
+  .intro { position: relative; margin: 92px 0 0; max-width: 640px; font: 500 36px/1.38 'Barlow', sans-serif; color: var(--bone-dim); }
+  .intro strong { color: var(--bone); font-weight: 700; }
+
+  .tally { position: absolute; right: 70px; top: 610px; width: 230px; transform: rotate(-6deg); opacity: .9; }
+  .tally path { fill: none; stroke: var(--bone); stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 6px #0008); }
+  .tally .slash { stroke: var(--blood-hi); }
+
+  .stamp { position: absolute; right: 84px; top: 852px; transform: rotate(-8deg); text-align: center;
+    font: 400 40px/1 'Anton', sans-serif; letter-spacing: .1em; color: var(--blood-hi);
+    border: 5px solid var(--blood-hi); padding: 16px 22px 14px; opacity: .82;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .stamp small { display: block; font: 17px 'Special Elite', monospace; letter-spacing: .24em; margin-top: 10px; }
+
+  footer { position: relative; margin-top: auto; }
+  .cta { display: flex; justify-content: space-between; align-items: center; background: var(--blood); padding: 34px 44px;
+    box-shadow: 10px 10px 0 var(--blood-deep); clip-path: polygon(0 0, 100% 0, 100% 78%, 97.5% 100%, 0 100%); }
+  .cta b { font: 700 46px/1 'Barlow', sans-serif; letter-spacing: .14em; }
+  .cta span { font: 400 50px/1 'Anton', sans-serif; }
+  .meta { display: flex; justify-content: space-between; margin-top: 30px; font: 23px 'Special Elite', monospace; letter-spacing: .14em; color: var(--ash); }
+  .meta b { color: var(--bone-dim); font-weight: 400; }
+</style>
+</head>
+<body>
+  <div class="post">
+    <div class="noise"></div>
+    <div class="scan"></div>
+
+    <header>
+      <div class="wordmark">ZEROED</div>
+      <div class="edition"><i></i>BETA CERRADA</div>
+    </header>
+
+
+    <p class="eyebrow">UN FPS DE SUPERVIVENCIA CONTRA ZOMBIS</p>
+    <h1>
+      <span>La mansión</span>
+      <span>te <em>espera.<i class="drip" style="left: 10%; height: 40px"></i><i class="drip" style="left: 44%; height: 70px"></i><i class="drip" style="left: 76%; height: 26px"></i></em></span>
+    </h1>
+
+
+    <p class="intro">La siguiente ronda puede ser la última. Apúntate a la beta cerrada y entra en <strong>Burned&nbsp;Mansion</strong> antes que nadie.</p>
+
+    <footer>
+      <div class="cta"><b>APÚNTATE · LINK EN LA BIO</b><span>↗</span></div>
+    </footer>
+  </div>
+</body>
+</html>
