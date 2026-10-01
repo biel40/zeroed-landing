@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [{
       name: 'local-beta-api',
       configureServer(server) {
-        process.env['BETA_SITE_ORIGIN'] ||= 'http://127.0.0.1:4174';
+        process.env['BETA_SITE_ORIGIN'] ||= 'http://127.0.0.1:4174,http://localhost:4174';
         server.middlewares.use('/api/beta', async (req, res) => {
           let body = '';
           try {

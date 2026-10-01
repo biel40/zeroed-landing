@@ -100,8 +100,6 @@ body:not(.is-booting) .boot { opacity: 0; visibility: hidden; }
 
 .hud { display: flex; align-items: center; gap: 28px; margin-left: auto; }
 .hud small { display: block; font: 10px var(--type); letter-spacing: .25em; color: var(--ash); margin-bottom: 2px; }
-.hud-points b { font: 400 26px/1 var(--display); color: var(--gold); letter-spacing: .04em; text-shadow: 0 0 14px #ffd23f55; font-variant-numeric: tabular-nums; display: inline-block; min-width: 4ch; }
-.hud-points b.bump { animation: bump .35s ease; }
 @keyframes bump { 40% { transform: scale(1.25); color: #fff3b0; } }
 .hud-round { display: flex; flex-direction: column; }
 .hud-round .tally { width: 60px; height: 34px; }
@@ -204,7 +202,7 @@ input[type=email]:focus-visible { outline: none; }
 .consent { position: relative; display: flex; gap: 12px; align-items: flex-start; color: var(--bone-dim); font-size: 13px; line-height: 1.55; margin-block: 18px 24px; cursor: pointer; }
 .consent input { position: absolute; opacity: 0; width: 20px; height: 20px; margin: 0; cursor: pointer; }
 .check { flex-shrink: 0; width: 20px; height: 20px; border: 1px solid #ece3cf55; background: #070504; display: grid; place-items: center; transition: border-color .2s; }
-.check::after { content: '✕'; font: 16px/1 var(--type); color: var(--blood-hi); transform: scale(0) rotate(-30deg); transition: transform .2s cubic-bezier(.5,1.8,.6,1); }
+.check::after { content: ''; width: 12px; height: 12px; background: linear-gradient(45deg, transparent calc(50% - 1px), var(--blood-hi) 0 calc(50% + 1px), transparent 0), linear-gradient(-45deg, transparent calc(50% - 1px), var(--blood-hi) 0 calc(50% + 1px), transparent 0); transform: scale(0) rotate(-30deg); transition: transform .2s cubic-bezier(.5,1.8,.6,1); }
 .consent input:checked + .check { border-color: var(--blood); }
 .consent input:checked + .check::after { transform: none; }
 .consent input:focus-visible + .check { outline: 2px solid var(--blood-hi); outline-offset: 3px; }
@@ -283,7 +281,6 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
   .wordmark { font-size: 28px; }
   .edition { display: none; }
   .hud { gap: 16px; }
-  .hud-points b { font-size: 22px; }
   .hero { grid-template-columns: 1fr; gap: 56px; padding-block: 44px 64px; }
   h1 { font-size: clamp(58px, 17vw, 96px); }
   .eyebrow { font-size: 11px; letter-spacing: .08em; }

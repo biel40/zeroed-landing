@@ -96,15 +96,8 @@ window.setTimeout(() => {
 }, bootDelay + 400);
 
 /* ───────── Points (+10 on every hit, like the old days) ───────── */
-const pointsEl = document.getElementById('points')!;
 const pointsLayer = document.getElementById('points-layer')!;
-let points = 500;
 function addPoints(amount: number, x: number, y: number, big = false) {
-  points += amount;
-  pointsEl.textContent = String(points);
-  pointsEl.classList.remove('bump');
-  void pointsEl.offsetWidth;
-  pointsEl.classList.add('bump');
   if (reducedMotion.matches) return;
   const pop = document.createElement('span');
   pop.className = big ? 'pop big' : 'pop';
@@ -313,7 +306,7 @@ if (videoUrl && !reducedMotion.matches && !connection?.saveData) {
 // unless they muted it before. The choice is remembered across visits.
 const music = document.querySelector<HTMLAudioElement>('#bg-music')!;
 const musicToggle = document.querySelector<HTMLButtonElement>('#music-toggle')!;
-const MUSIC_KEY = 'zeroed-music';
+const MUSIC_KEY = 'zeroed-music-v2';
 const MUSIC_VOLUME = 0.35;
 let musicWanted = true;
 try { musicWanted = localStorage.getItem(MUSIC_KEY) !== 'off'; } catch { /* Storage can be blocked. */ }
@@ -327,8 +320,9 @@ function fadeMusic(target: number, onDone?: () => void) {
     if (music.volume === target) { window.clearInterval(musicFade); onDone?.(); }
   }, 60);
 }
+// Shows the visitor's choice, so it reads as on even while the browser waits for a gesture.
 function renderMusic() {
-  const on = !music.paused;
+  const on = musicWanted;
   musicToggle.setAttribute('aria-pressed', String(on));
   musicToggle.setAttribute('aria-label', on ? 'Silenciar música de fondo' : 'Activar música de fondo');
 }
@@ -341,6 +335,7 @@ function stopMusic() {
 }
 function rememberMusic(on: boolean) {
   musicWanted = on;
+  renderMusic();
   try { localStorage.setItem(MUSIC_KEY, on ? 'on' : 'off'); } catch { /* Ignore. */ }
 }
 
@@ -348,20 +343,22 @@ music.addEventListener('error', () => { musicToggle.hidden = true; });
 musicToggle.hidden = false;
 renderMusic();
 musicToggle.addEventListener('click', () => {
-  const start = music.paused;
-  rememberMusic(start);
-  if (start) void playMusic(); else stopMusic();
+  // Still blocked by the browser: this click is the gesture that starts it.
+  if (musicWanted && music.paused) { void playMusic(); return; }
+  rememberMusic(!musicWanted);
+  if (musicWanted) void playMusic(); else stopMusic();
 });
 if (musicWanted) {
   // Try to start immediately; if the browser blocks it, the first gesture below starts it instead.
   void playMusic();
-  const unlock = () => {
-    window.removeEventListener('pointerdown', unlock);
-    window.removeEventListener('keydown', unlock);
+  const gestures = ['pointerdown', 'keydown', 'touchend'] as const;
+  const unlock = (event: Event) => {
+    // The toggle's own click handler deals with gestures on it.
+    if (event.target instanceof Node && musicToggle.contains(event.target)) return;
+    gestures.forEach((name) => window.removeEventListener(name, unlock));
     if (musicWanted && music.paused) void playMusic();
   };
-  window.addEventListener('pointerdown', unlock);
-  window.addEventListener('keydown', unlock);
+  gestures.forEach((name) => window.addEventListener(name, unlock));
 }
 // Don't keep playing in a background tab.
 let resumeMusic = false;

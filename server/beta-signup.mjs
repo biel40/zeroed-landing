@@ -22,9 +22,10 @@ export function createBetaHandler(sendMail, isConfigured) {
     }
     // Browsers must submit from this site. This is not an authentication check.
     const origin = req.headers['origin'];
-    const expectedOrigin = process.env['BETA_SITE_ORIGIN'] || 'https://zeroed.es';
+    // BETA_SITE_ORIGIN may list several origins separated by commas.
+    const allowedOrigins = (process.env['BETA_SITE_ORIGIN'] || 'https://zeroed.es').split(',').map((o) => o.trim());
     if (typeof origin !== 'string') return reply(403, { ok: false });
-    if (origin !== expectedOrigin) return reply(403, { ok: false });
+    if (!allowedOrigins.includes(origin)) return reply(403, { ok: false });
     const contentType = req.headers['content-type'];
     if (typeof contentType !== 'string' || !/^application\/json(?:\s*;|$)/i.test(contentType)) {
       return reply(415, { ok: false });
