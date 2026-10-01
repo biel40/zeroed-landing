@@ -30,8 +30,10 @@
   font-synthesis: none;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; overflow-x: hidden; background: var(--ink); }
+/* Clip on both: mobile browsers widen the layout viewport to fit overflowing content (like the
+   fog layers or the tape band) unless the root itself clips it. */
+html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; }
+body { margin: 0; min-width: 320px; overflow-x: hidden; overflow-x: clip; background: var(--ink); }
 [hidden] { display: none !important; }
 a { color: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -184,9 +186,6 @@ h1 .line + .line > span { transition-delay: .14s; }
 .tape { position: absolute; top: -14px; width: 92px; height: 26px; background: #d9cba366; box-shadow: 0 2px 6px #0006; }
 .tape-l { left: 18px; transform: rotate(-6deg); }
 .tape-r { right: 18px; transform: rotate(5deg); }
-.stamp { position: absolute; right: clamp(18px, 2.4vw, 34px); bottom: clamp(26px, 3vw, 40px); font: 15px/1.1 var(--type); letter-spacing: .12em; text-align: center; color: var(--blood); border: 3px double var(--blood); padding: 6px 10px; transform: rotate(-12deg) scale(2.4); opacity: 0; mix-blend-mode: screen; pointer-events: none; }
-.is-ready .stamp { animation: stamp .45s cubic-bezier(.5,1.8,.6,1) 1.5s forwards; }
-@keyframes stamp { to { opacity: .8; transform: rotate(-12deg) scale(1); } }
 .signup .eyebrow { color: var(--blood-hi); margin-bottom: 16px; font-size: 12px; }
 h2 { font: 400 clamp(34px, 3.4vw, 50px)/1.02 var(--display); letter-spacing: .01em; text-transform: uppercase; margin: 0 0 18px; }
 h2 span { color: var(--blood); }
@@ -285,7 +284,6 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
   h1 { font-size: clamp(58px, 17vw, 96px); }
   .eyebrow { font-size: 11px; letter-spacing: .08em; }
   .hero-actions .cta { width: 100%; }
-  .stamp { position: relative; display: table; right: auto; bottom: auto; margin: 22px 0 0 auto; font-size: 12px; }
   .tape-track span { font-size: 18px; }
   .card { padding: 26px 22px 28px; }
   .final-call .cta { width: 100%; }
@@ -296,7 +294,7 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
 
 /* ───────── Entry gate (first gesture, so the music can start with sound) ───────── */
 .gate { display: none; }
-.js .gate { position: fixed; inset: 0; z-index: 101; display: flex; padding: 24px; overflow-y: auto; background: #050403; transition: opacity .5s ease, visibility 0s .5s; }
+.js .gate { position: fixed; inset: 0; z-index: 101; display: flex; height: 100vh; height: 100dvh; padding: 24px; overflow: hidden; overscroll-behavior: none; touch-action: none; background: #050403; transition: opacity .5s ease, visibility 0s .5s; }
 .gate::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse 55% 45% at 50% 55%, #8a0f1347, transparent 70%), radial-gradient(ellipse 40% 30% at 72% 30%, #ff5a1f1f, transparent 70%); }
 .gate::after { content: ''; position: fixed; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, #00000033 0 1px, transparent 1px 3px), radial-gradient(ellipse 120% 90% at 50% 45%, transparent 50%, #000000cc 100%); }
 .gate-inner { position: relative; z-index: 1; margin: auto; display: grid; justify-items: center; text-align: center; gap: 0; max-width: 520px; }
@@ -308,7 +306,8 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
 .gate-icon { flex: none; width: 22px; height: 22px; fill: currentColor; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .gate-icon path + path { fill: none; }
 body:not(.is-gated) .gate { opacity: 0; visibility: hidden; pointer-events: none; }
-body.is-gated { overflow: hidden; }
+/* Mobile browsers scroll the root, not the body, so both have to be locked while the gate is up. */
+html:has(body.is-gated), body.is-gated { overflow: hidden; overscroll-behavior: none; }
 .is-gated .boot * { animation-play-state: paused; }
 @media (max-width: 720px) {
   .gate .cta { width: 100%; }
