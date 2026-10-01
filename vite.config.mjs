@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [{
       name: 'local-beta-api',
       configureServer(server) {
-        process.env.BETA_SITE_ORIGIN ||= 'http://127.0.0.1:4174';
+        process.env['BETA_SITE_ORIGIN'] ||= 'http://127.0.0.1:4174';
         server.middlewares.use('/api/beta', async (req, res) => {
           let body = '';
           try {
@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
                 return;
               }
             }
+            /** @type {import('./server/beta-signup.mjs').BetaSignupResponse} */
             const response = {
               setHeader: (name, value) => res.setHeader(name, value),
               status(code) { res.statusCode = code; return this; },

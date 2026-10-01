@@ -1,31 +1,47 @@
 export const BETA_INBOX = 'biel40aws@gmail.com';
 
+/**
+ * @param {import('./beta-signup.mjs').MailSender} sendMail
+ * @param {() => boolean} isConfigured
+ */
 export function createBetaHandler(sendMail, isConfigured) {
+  /**
+   * @param {import('./beta-signup.mjs').BetaSignupRequest} req
+   * @param {import('./beta-signup.mjs').BetaSignupResponse} res
+   */
   return async function betaSignup(req, res) {
     res.setHeader('Cache-Control', 'no-store');
+    /**
+     * @param {number} status
+     * @param {{ ok: boolean }} body
+     */
     const reply = (status, body) => res.status(status).json(body);
     if (req.method !== 'POST') {
       res.setHeader('Allow', 'POST');
       return reply(405, { ok: false });
     }
     // Browsers must submit from this site. This is not an authentication check.
-    const origin = req.headers.origin;
-    const expectedOrigin = process.env.BETA_SITE_ORIGIN || 'https://zeroed.es';
+    const origin = req.headers['origin'];
+    const expectedOrigin = process.env['BETA_SITE_ORIGIN'] || 'https://zeroed.es';
+    if (typeof origin !== 'string') return reply(403, { ok: false });
     if (origin !== expectedOrigin) return reply(403, { ok: false });
-    if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) {
+    const contentType = req.headers['content-type'];
+    if (typeof contentType !== 'string' || !/^application\/json(?:\s*;|$)/i.test(contentType)) {
       return reply(415, { ok: false });
     }
-    if (Number(req.headers['content-length']) > 2048) return reply(413, { ok: false });
+    const contentLength = req.headers['content-length'];
+    if (typeof contentLength === 'string' && Number(contentLength) > 2048) return reply(413, { ok: false });
+    /** @type {unknown} */
     let body;
     try {
       const raw = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
       if (!raw || Buffer.byteLength(raw) > 2048) return reply(413, { ok: false });
       body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     } catch { return reply(400, { ok: false }); }
-    if (!body || typeof body !== 'object' || Array.isArray(body)) return reply(400, { ok: false });
-    if (typeof body.website !== 'string' || body.website !== '') return reply(400, { ok: false });
-    const email = typeof body.email === 'string' ? body.email.trim() : '';
-    if (body.consent !== true || email.length > 254
+    if (!isRecord(body)) return reply(400, { ok: false });
+    if (typeof body['website'] !== 'string' || body['website'] !== '') return reply(400, { ok: false });
+    const email = typeof body['email'] === 'string' ? body['email'].trim() : '';
+    if (body['consent'] !== true || email.length > 254
       || !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)+$/.test(email)) {
       return reply(400, { ok: false });
     }
@@ -50,3 +66,10 @@ export function createBetaHandler(sendMail, isConfigured) {
   };
 }
 
+/**
+ * @param {unknown} value
+ * @returns {value is Record<string, unknown>}
+ */
+function isRecord(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}

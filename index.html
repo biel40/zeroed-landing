@@ -39,16 +39,20 @@
   <header class="header">
     <a class="wordmark" href="/" aria-label="Zeroed, beta cerrada"><span class="glitch" data-text="ZEROED">ZEROED</span></a>
     <div class="hud" aria-hidden="true">
-      <div class="hud-points"><small>PUNTOS</small><b id="points">500</b></div>
       <div class="hud-round"><small>RONDA</small><svg id="round-tally" class="tally" viewBox="0 0 120 80"></svg></div>
     </div>
     <span class="edition"><i aria-hidden="true"></i> BETA CERRADA</span>
+    <button id="music-toggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Activar música de fondo" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path class="speaker" d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="mute" d="M16 9l5 6M21 9l-5 6"/></svg>
+      <span class="music-label">SONIDO</span>
+    </button>
+    <audio id="bg-music" src="/audio/ambient.mp3" loop preload="none"></audio>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="hero-title" data-round="1">
       <div class="hero-copy">
-        <p class="eyebrow type"><span class="blink" aria-hidden="true">■</span> UN FPS DE SUPERVIVENCIA CONTRA ZOMBIS</p>
+        <p class="eyebrow type"><span class="blink" aria-hidden="true"></span> UN FPS DE SUPERVIVENCIA CONTRA ZOMBIS</p>
         <h1 id="hero-title">
           <span class="line"><span>LA MANSIÓN</span></span>
           <span class="line"><span>TE <em class="blood">ESPERA.<i class="drip" style="--x: 9%; --h: .2em; --t: 3.2s"></i><i class="drip" style="--x: 41%; --h: .32em; --t: 4.6s; --w: .4s"></i><i class="drip" style="--x: 74%; --h: .12em; --t: 2.6s; --w: 1s"></i></em></span></span>
@@ -68,7 +72,7 @@
         <span class="tape tape-l" aria-hidden="true"></span>
         <span class="tape tape-r" aria-hidden="true"></span>
         <span class="stamp" aria-hidden="true">ACCESO<br />RESTRINGIDO</span>
-        <p class="eyebrow type">EXPEDIENTE 115 · ACCESO ANTICIPADO</p>
+        <p class="eyebrow type">EXPEDIENTE 115 </p>
         <h2 id="signup-title">Sé parte de<br />la <span>primera ronda.</span></h2>
         <p>Apúntate a la lista de la beta cerrada. Si eres seleccionado, te enviaremos la invitación por email.</p>
         <form id="beta-form" method="post" action="/api/beta">
@@ -97,8 +101,7 @@
 
     <section class="features" aria-labelledby="features-title" data-round="2">
       <header class="section-head reveal">
-        <p class="eyebrow type">INFORME DE CAMPO</p>
-        <h2 id="features-title">Esto es lo que<br />te <span>espera dentro.</span></h2>
+        <h2 id="features-title">Esto es lo que<br />te <span>espera.</span></h2>
       </header>
       <div class="cards">
         <article class="card reveal" style="--d: 0ms">
@@ -111,7 +114,7 @@
           <span class="card-num">02</span>
           <svg class="card-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 6 26v4h4v26h16V42h12v14h16V30h4v-4zm-10 30h-6v-8h6zm26 0h-6v-8h6zM29 30v-8h6v8z"/><path class="flame" d="M44 4c2 4-2 6 0 10 1-2 4-2 4-6 2 3 2 8-2 10-4 1-6-2-5-5 0-3 3-5 3-9z"/></svg>
           <h3>Explora</h3>
-          <p>Una mansión en ruinas, devorada por el fuego. Secretos por descubrir en cada pasillo.</p>
+          <p>Una mansión en ruinas, devorada por el fuego. Secretos por descubrir aguardan...</p>
         </article>
         <article class="card reveal" style="--d: 240ms">
           <span class="card-num">03</span>
@@ -124,7 +127,6 @@
 
     <section class="steps" aria-labelledby="steps-title" data-round="3">
       <header class="section-head reveal">
-        <p class="eyebrow type">PROTOCOLO DE ACCESO</p>
         <h2 id="steps-title">Cómo entrar<br />en la <span>beta cerrada.</span></h2>
       </header>
       <ol class="step-list">

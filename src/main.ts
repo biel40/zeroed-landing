@@ -70,7 +70,7 @@ window.setTimeout(() => setRound(1), bootDelay + 300);
 
 // Step tallies count 1, 2, 3 and draw themselves when revealed.
 document.querySelectorAll<SVGSVGElement>('.step-tally .tally').forEach((svg, i) => {
-  svg.dataset.count = String(i + 1);
+  svg.dataset['count'] = String(i + 1);
 });
 
 /* ───────── Scroll reveals & round progression ───────── */
@@ -80,7 +80,7 @@ const revealObserver = new IntersectionObserver((entries) => {
     const el = entry.target as HTMLElement;
     el.classList.add('in');
     const tally = el.querySelector<SVGSVGElement>('.step-tally .tally');
-    if (tally) window.setTimeout(() => renderTally(tally, Number(tally.dataset.count), 0), 300 + (parseInt(el.style.getPropertyValue('--d')) || 0));
+    if (tally) window.setTimeout(() => renderTally(tally, Number(tally.dataset['count']), 0), 300 + (parseInt(el.style.getPropertyValue('--d')) || 0));
     revealObserver.unobserve(el);
   }
 }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
@@ -88,7 +88,7 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
 
 const roundObserver = new IntersectionObserver((entries) => {
   for (const entry of entries) {
-    if (entry.isIntersecting && body.classList.contains('is-ready')) setRound(Number((entry.target as HTMLElement).dataset.round));
+    if (entry.isIntersecting && body.classList.contains('is-ready')) setRound(Number((entry.target as HTMLElement).dataset['round']));
   }
 }, { threshold: 0.35 });
 window.setTimeout(() => {
@@ -119,7 +119,7 @@ document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement;
   if (target.closest('input, label, #beta-form, footer')) return;
   const bonus = target.closest<HTMLElement>('[data-points]');
-  addPoints(bonus ? Number(bonus.dataset.points) : 10, event.clientX, event.clientY);
+  addPoints(bonus ? Number(bonus.dataset['points']) : 10, event.clientX, event.clientY);
 });
 
 /* ───────── Flashlight & card tilt ───────── */
@@ -276,8 +276,8 @@ form.addEventListener('submit', (event) => {
 });
 
 /* ───────── Optional gameplay background ───────── */
-const posterUrl = import.meta.env.VITE_BETA_POSTER_URL?.trim();
-const videoUrl = import.meta.env.VITE_BETA_VIDEO_URL?.trim();
+const posterUrl = import.meta.env['VITE_BETA_POSTER_URL']?.trim();
+const videoUrl = import.meta.env['VITE_BETA_VIDEO_URL']?.trim();
 const poster = document.querySelector<HTMLImageElement>('#background-poster')!;
 const video = document.querySelector<HTMLVideoElement>('#background-video')!;
 const toggle = document.querySelector<HTMLButtonElement>('#video-toggle')!;
@@ -307,3 +307,70 @@ if (videoUrl && !reducedMotion.matches && !connection?.saveData) {
   // Autoplay can be blocked by the Instagram browser; the poster remains visible.
   void video.play().catch(() => { toggle.hidden = false; toggle.textContent = 'Reproducir fondo'; });
 }
+
+/* ───────── Background music ───────── */
+// Browsers block audio with sound until the visitor interacts, so playback starts on the first gesture
+// unless they muted it before. The choice is remembered across visits.
+const music = document.querySelector<HTMLAudioElement>('#bg-music')!;
+const musicToggle = document.querySelector<HTMLButtonElement>('#music-toggle')!;
+const MUSIC_KEY = 'zeroed-music';
+const MUSIC_VOLUME = 0.35;
+let musicWanted = true;
+try { musicWanted = localStorage.getItem(MUSIC_KEY) !== 'off'; } catch { /* Storage can be blocked. */ }
+let musicFade = 0;
+
+function fadeMusic(target: number, onDone?: () => void) {
+  window.clearInterval(musicFade);
+  musicFade = window.setInterval(() => {
+    const step = (target - music.volume) / 6;
+    music.volume = Math.abs(step) < 0.01 ? target : Math.min(1, Math.max(0, music.volume + step));
+    if (music.volume === target) { window.clearInterval(musicFade); onDone?.(); }
+  }, 60);
+}
+function renderMusic() {
+  const on = !music.paused;
+  musicToggle.setAttribute('aria-pressed', String(on));
+  musicToggle.setAttribute('aria-label', on ? 'Silenciar música de fondo' : 'Activar música de fondo');
+}
+function playMusic() {
+  music.volume = 0;
+  return music.play().then(() => { fadeMusic(MUSIC_VOLUME); renderMusic(); }).catch(() => renderMusic());
+}
+function stopMusic() {
+  fadeMusic(0, () => { music.pause(); renderMusic(); });
+}
+function rememberMusic(on: boolean) {
+  musicWanted = on;
+  try { localStorage.setItem(MUSIC_KEY, on ? 'on' : 'off'); } catch { /* Ignore. */ }
+}
+
+music.addEventListener('error', () => { musicToggle.hidden = true; });
+musicToggle.hidden = false;
+renderMusic();
+musicToggle.addEventListener('click', () => {
+  const start = music.paused;
+  rememberMusic(start);
+  if (start) void playMusic(); else stopMusic();
+});
+if (musicWanted) {
+  // Try to start immediately; if the browser blocks it, the first gesture below starts it instead.
+  void playMusic();
+  const unlock = () => {
+    window.removeEventListener('pointerdown', unlock);
+    window.removeEventListener('keydown', unlock);
+    if (musicWanted && music.paused) void playMusic();
+  };
+  window.addEventListener('pointerdown', unlock);
+  window.addEventListener('keydown', unlock);
+}
+// Don't keep playing in a background tab.
+let resumeMusic = false;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    resumeMusic = !music.paused;
+    music.pause();
+  } else if (resumeMusic) {
+    resumeMusic = false;
+    void playMusic();
+  }
+});

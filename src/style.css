@@ -109,6 +109,14 @@ body:not(.is-booting) .boot { opacity: 0; visibility: hidden; }
 .edition { display: flex; align-items: center; gap: 9px; font: 12px var(--type); letter-spacing: .14em; color: var(--bone-dim); padding: 8px 12px; border: 1px solid var(--line); }
 .edition i { width: 7px; height: 7px; border-radius: 50%; background: var(--blood-hi); box-shadow: 0 0 12px var(--blood-hi); animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; box-shadow: 0 0 2px var(--blood-hi); } }
+.music-toggle { display: flex; align-items: center; gap: 9px; font: 12px var(--type); letter-spacing: .14em; color: var(--bone-dim); background: transparent; padding: 8px 12px; border: 1px solid var(--line); cursor: pointer; transition: color .2s, border-color .2s; }
+.music-toggle[hidden] { display: none; }
+.music-toggle:hover { color: var(--bone); border-color: #ece3cf55; }
+.music-toggle svg { width: 18px; height: 18px; fill: currentColor; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.music-toggle .wave, .music-toggle .mute { fill: none; }
+.music-toggle .mute { stroke: var(--blood-hi); }
+.music-toggle[aria-pressed="true"] { color: var(--bone); }
+.music-toggle[aria-pressed="true"] .mute, .music-toggle[aria-pressed="false"] .wave { display: none; }
 
 /* ───────── Hero ───────── */
 .hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: clamp(32px, 5vw, 88px); padding-top: clamp(48px, 9vh, 110px); padding-bottom: 72px; align-items: center; }

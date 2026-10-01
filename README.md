@@ -11,6 +11,7 @@ Requiere Node 20.19+ o 22.12+.
 ```powershell
 npm ci
 npm run dev
+npm run typecheck
 npm run build
 npm test
 ```

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "allowJs": true,
+    "checkJs": true,
     "isolatedModules": true,
     "lib": [
       "ES2022",
@@ -11,17 +13,25 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
     "module": "ESNext",
     "noUnusedLocals": true,
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "noEmit": true,
     "noUncheckedSideEffectImports": true,
     "strict": true
   },
   "include": [
-    "src"
+    "src",
+    "api",
+    "server",
+    "vite.config.mjs"
   ]
 }
