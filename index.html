@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0806" />
+  <meta name="description" content="Entra en Burned Mansion. Apúntate a la lista de la beta cerrada de Zeroed, el FPS de supervivencia contra zombis." />
+  <meta property="og:title" content="ZEROED · Beta cerrada" />
+  <meta property="og:description" content="La mansión te espera. Apúntate para tener la oportunidad de probar Zeroed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://zeroed.es/" />
+  <meta property="og:image" content="https://zeroed.es/zeroed-icon.png" />
+  <link rel="canonical" href="https://zeroed.es/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>Beta cerrada | Zeroed</title>
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="is-booting">
+  <div class="backdrop" aria-hidden="true">
+    <img id="background-poster" class="background-media" alt="" hidden />
+    <video id="background-video" class="background-media" muted loop playsinline preload="none" hidden></video>
+    <div class="fog fog-a"></div>
+    <div class="fog fog-b"></div>
+    <canvas id="embers"></canvas>
+  </div>
+  <div class="fx" aria-hidden="true">
+    <div class="flashlight"></div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+    <div class="scanlines"></div>
+    <div class="round-flash"></div>
+  </div>
+  <div class="boot" aria-hidden="true">
+    <svg class="tally boot-tally" viewBox="0 0 60 120"><path pathLength="1" d="M30 8 C26 40 33 78 28 112" /></svg>
+    <p>RONDA 1</p>
+  </div>
+  <div id="points-layer" aria-hidden="true"></div>
+
+  <header class="header">
+    <a class="wordmark" href="/" aria-label="Zeroed, beta cerrada"><span class="glitch" data-text="ZEROED">ZEROED</span></a>
+    <div class="hud" aria-hidden="true">
+      <div class="hud-points"><small>PUNTOS</small><b id="points">500</b></div>
+      <div class="hud-round"><small>RONDA</small><svg id="round-tally" class="tally" viewBox="0 0 120 80"></svg></div>
+    </div>
+    <span class="edition"><i aria-hidden="true"></i> BETA CERRADA</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title" data-round="1">
+      <div class="hero-copy">
+        <p class="eyebrow type"><span class="blink" aria-hidden="true">■</span> UN FPS DE SUPERVIVENCIA CONTRA ZOMBIS</p>
+        <h1 id="hero-title">
+          <span class="line"><span>LA MANSIÓN</span></span>
+          <span class="line"><span>TE <em class="blood">ESPERA.<i class="drip" style="--x: 9%; --h: .2em; --t: 3.2s"></i><i class="drip" style="--x: 41%; --h: .32em; --t: 4.6s; --w: .4s"></i><i class="drip" style="--x: 74%; --h: .12em; --t: 2.6s; --w: 1s"></i></em></span></span>
+        </h1>
+        <p class="intro">La siguiente ronda puede ser la última.<br />Entra en <strong>Burned Mansion</strong> y descubre hasta dónde puedes llegar.</p>
+        <div class="hero-actions">
+          <a class="cta" href="#inscripcion" data-points="100"><span class="cta-label">QUIERO APUNTARME</span> <span class="cta-icon" aria-hidden="true">↗</span></a>
+          <p class="cta-note">Solo tu email.<br />Sin crear una cuenta.</p>
+        </div>
+        <ul class="platforms" aria-label="Plataformas">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9h10v8a1 1 0 0 1-1 1h-1v3h-2v-3h-2v3H9v-3H8a1 1 0 0 1-1-1zM4 9h2v7H4zm14 0h2v7h-2zM8.2 4.4 7.2 2.8l.6-.4 1 1.7A6 6 0 0 1 12 3.3a6 6 0 0 1 3.2.8l1-1.7.6.4-1 1.6A5 5 0 0 1 17 8H7a5 5 0 0 1 1.2-3.6zM10 6.3a.6.6 0 1 0 0-1.2.6.6 0 0 0 0 1.2zm4 0a.6.6 0 1 0 0-1.2.6.6 0 0 0 0 1.2z"/></svg>Android</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-3a15 15 0 0 0-1.3-3.8A8 8 0 0 1 18.9 8zM12 4.1A13 13 0 0 1 13.8 8h-3.6A13 13 0 0 1 12 4.1zM4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4zm.8 2h3a15 15 0 0 0 1.3 3.8A8 8 0 0 1 5.1 16zm3-8h-3a8 8 0 0 1 4.3-3.8A15 15 0 0 0 8.1 8zM12 19.9a13 13 0 0 1-1.8-3.9h3.6a13 13 0 0 1-1.8 3.9zm2.2-5.9H9.8a14 14 0 0 1 0-4h4.4a14 14 0 0 1 0 4zm.4 5.8a15 15 0 0 0 1.3-3.8h3a8 8 0 0 1-4.3 3.8zm1.7-5.8a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4z"/></svg>Web</li>
+        </ul>
+      </div>
+
+      <section id="inscripcion" class="signup" aria-labelledby="signup-title">
+        <span class="tape tape-l" aria-hidden="true"></span>
+        <span class="tape tape-r" aria-hidden="true"></span>
+        <span class="stamp" aria-hidden="true">ACCESO<br />RESTRINGIDO</span>
+        <p class="eyebrow type">EXPEDIENTE 115 · ACCESO ANTICIPADO</p>
+        <h2 id="signup-title">Sé parte de<br />la <span>primera ronda.</span></h2>
+        <p>Apúntate a la lista de la beta cerrada. Si eres seleccionado, te enviaremos la invitación por email.</p>
+        <form id="beta-form" method="post" action="/api/beta">
+          <label for="email">Tu email</label>
+          <div class="field">
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="superviviente@email.com" required />
+            <span class="field-corner" aria-hidden="true"></span>
+          </div>
+          <div class="honeypot" aria-hidden="true"><label for="website">Tu web</label><input id="website" name="website" tabindex="-1" autocomplete="off" /></div>
+          <label class="consent"><input name="consent" type="checkbox" required /><span class="check" aria-hidden="true"></span><span>Quiero recibir la invitación y comunicaciones sobre esta beta. He leído la <a href="/privacy.html#beta">política de privacidad</a>.</span></label>
+          <button class="cta cta-block" type="submit"><span class="cta-label">APUNTARME A LA BETA</span> <span class="cta-icon" aria-hidden="true">↗</span></button>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+        <noscript><p>Activa JavaScript para enviar tu solicitud.</p></noscript>
+        <p class="signup-note">Apuntarte no garantiza una plaza en la beta.</p>
+        <a class="privacy" href="/privacy.html#beta">Privacidad y uso de tu email ↗</a>
+      </section>
+    </section>
+
+    <div class="tape-band" aria-hidden="true">
+      <div class="tape-track">
+        <span>BURNED MANSION ✕ THE DEAD ARE COMING ✕ NO HAY SALIDA ✕ AGUANTA UNA RONDA MÁS ✕ BURNED MANSION ✕ THE DEAD ARE COMING ✕ NO HAY SALIDA ✕ AGUANTA UNA RONDA MÁS ✕&nbsp;</span>
+        <span>BURNED MANSION ✕ THE DEAD ARE COMING ✕ NO HAY SALIDA ✕ AGUANTA UNA RONDA MÁS ✕ BURNED MANSION ✕ THE DEAD ARE COMING ✕ NO HAY SALIDA ✕ AGUANTA UNA RONDA MÁS ✕&nbsp;</span>
+      </div>
+    </div>
+
+    <section class="features" aria-labelledby="features-title" data-round="2">
+      <header class="section-head reveal">
+        <p class="eyebrow type">INFORME DE CAMPO</p>
+        <h2 id="features-title">Esto es lo que<br />te <span>espera dentro.</span></h2>
+      </header>
+      <div class="cards">
+        <article class="card reveal" style="--d: 0ms">
+          <span class="card-num">01</span>
+          <svg class="card-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6c-12 0-21 9-21 20 0 7 3 11 6 14v8c0 2 2 4 4 4h4v-6h4v6h6v-6h4v6h4c2 0 4-2 4-4v-8c3-3 6-7 6-14C53 15 44 6 32 6zm-9 30a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm18 0a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-9 6-3-6h6z"/></svg>
+          <h3>Sobrevive</h3>
+          <p>Rondas de zombis. Cada vez más difíciles. Cada vez más rápidos.</p>
+        </article>
+        <article class="card reveal" style="--d: 120ms">
+          <span class="card-num">02</span>
+          <svg class="card-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 6 26v4h4v26h16V42h12v14h16V30h4v-4zm-10 30h-6v-8h6zm26 0h-6v-8h6zM29 30v-8h6v8z"/><path class="flame" d="M44 4c2 4-2 6 0 10 1-2 4-2 4-6 2 3 2 8-2 10-4 1-6-2-5-5 0-3 3-5 3-9z"/></svg>
+          <h3>Explora</h3>
+          <p>Una mansión en ruinas, devorada por el fuego. Secretos por descubrir en cada pasillo.</p>
+        </article>
+        <article class="card reveal" style="--d: 240ms">
+          <span class="card-num">03</span>
+          <svg class="card-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M22 10a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm20 0a8 8 0 1 1 0 16 8 8 0 0 1 0-16zM8 50c0-10 6-18 14-18 4 0 7 2 10 5 3-3 6-5 10-5 8 0 14 8 14 18v4H8z"/></svg>
+          <h3>Resiste</h3>
+          <p>En solitario o con un compañero. Cubríos las espaldas o caed juntos.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="steps-title" data-round="3">
+      <header class="section-head reveal">
+        <p class="eyebrow type">PROTOCOLO DE ACCESO</p>
+        <h2 id="steps-title">Cómo entrar<br />en la <span>beta cerrada.</span></h2>
+      </header>
+      <ol class="step-list">
+        <li class="reveal" style="--d: 0ms"><span class="step-tally" aria-hidden="true"><svg class="tally" viewBox="0 0 120 80"></svg></span><div><h3>Apúntate</h3><p>Deja tu email en el formulario. Sin cuentas, sin contraseñas.</p></div></li>
+        <li class="reveal" style="--d: 120ms"><span class="step-tally" aria-hidden="true"><svg class="tally" viewBox="0 0 120 80"></svg></span><div><h3>Espera la señal</h3><p>Revisamos las solicitudes y elegimos a los primeros supervivientes.</p></div></li>
+        <li class="reveal" style="--d: 240ms"><span class="step-tally" aria-hidden="true"><svg class="tally" viewBox="0 0 120 80"></svg></span><div><h3>Entra en la mansión</h3><p>Si eres seleccionado, te llega la invitación por email para jugar en Android o en la web.</p></div></li>
+      </ol>
+      <div class="final-call reveal" data-round="4">
+        <p class="type">¿Cuántas rondas aguantarás?</p>
+        <a class="cta" href="#inscripcion" data-points="100"><span class="cta-label">RESERVAR MI PLAZA</span> <span class="cta-icon" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year">2026</span> ZEROED · BIEL40</span>
+    <a href="/privacy.html#beta">Privacidad</a>
+    <a href="mailto:biel40aws@gmail.com">Contacto ↗</a>
+    <button id="video-toggle" type="button" hidden>Pausar fondo</button>
+  </footer>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

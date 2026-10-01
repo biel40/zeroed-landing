@@ -1,0 +1,27 @@
+{
+  "name": "zeroed-landing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Independent closed-beta registration landing for Zeroed",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4174 --strictPort",
+    "start": "vite --host 127.0.0.1 --port 4174 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4174 --strictPort",
+    "test": "node --test server/beta-signup.test.mjs"
+  },
+  "dependencies": {
+    "@fontsource/anton": "^5.3.0",
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/special-elite": "^5.3.0",
+    "nodemailer": "^10.0.13"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "isolatedModules": true,
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "noUnusedLocals": true,
+    "types": [
+      "vite/client"
+    ],
+    "noEmit": true,
+    "noUncheckedSideEffectImports": true,
+    "strict": true
+  },
+  "include": [
+    "src"
+  ]
+}
