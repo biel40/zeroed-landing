@@ -8,7 +8,28 @@ const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());
 
 // Rough-edged filter shared by every tally mark so they look painted, not vector-perfect.
-body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></svg>`);
+body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+  <filter id="blood-goo" x="-10%" y="-20%" width="120%" height="200%" color-interpolation-filters="sRGB">
+    <feGaussianBlur id="goo-blur" in="SourceGraphic" stdDeviation="3" result="blur"/>
+    <feColorMatrix in="blur" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -7" result="goo"/>
+    <feComposite in="SourceGraphic" in2="goo" operator="atop" result="body"/>
+    <feGaussianBlur id="goo-soft" in="goo" stdDeviation="2.5" result="soft"/>
+    <feSpecularLighting in="soft" surfaceScale="5" specularConstant="1" specularExponent="24" lighting-color="#ffc2c2" result="spec"><feDistantLight azimuth="225" elevation="32"/></feSpecularLighting>
+    <feComposite in="spec" in2="goo" operator="in" result="gloss"/>
+    <feComposite in="gloss" in2="body" operator="arithmetic" k2=".5" k3="1"/>
+  </filter></svg>`);
+// The goo blur is in px, so it follows the title size or small screens melt the letters into a blob.
+const bloodWord = document.querySelector<HTMLElement>('.blood');
+const gooBlur = document.getElementById('goo-blur');
+const gooSoft = document.getElementById('goo-soft');
+function syncGoo() {
+  if (!bloodWord) return;
+  const size = parseFloat(getComputedStyle(bloodWord).fontSize);
+  gooBlur?.setAttribute('stdDeviation', (size * .023).toFixed(2));
+  gooSoft?.setAttribute('stdDeviation', (size * .019).toFixed(2));
+}
+syncGoo();
+window.addEventListener('resize', syncGoo, { passive: true });
 
 /* ───────── Boot sequence ───────── */
 const glitch = document.querySelector<HTMLElement>('.wordmark .glitch');
@@ -322,9 +343,11 @@ let musicFade = 0;
 function fadeMusic(target: number, onDone?: () => void) {
   window.clearInterval(musicFade);
   musicFade = window.setInterval(() => {
-    const step = (target - music.volume) / 6;
-    music.volume = Math.abs(step) < 0.01 ? target : Math.min(1, Math.max(0, music.volume + step));
-    if (music.volume === target) { window.clearInterval(musicFade); onDone?.(); }
+    const before = music.volume;
+    const step = (target - before) / 6;
+    music.volume = Math.abs(step) < 0.01 ? target : Math.min(1, Math.max(0, before + step));
+    // iOS ignores volume changes from script, so finish at once instead of fading forever.
+    if (music.volume === target || music.volume === before) { window.clearInterval(musicFade); onDone?.(); }
   }, 60);
 }
 function musicIsOn() { return musicWanted && !music.paused; }

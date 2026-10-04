@@ -131,13 +131,22 @@ h1 .line + .line > span { transition-delay: .14s; }
 .is-dripping h1 .line:last-child { overflow: visible; }
 
 .blood { position: relative; display: inline-block; font-style: normal; color: var(--blood);
-  background: linear-gradient(180deg, var(--blood-hi) 0%, var(--blood) 55%, var(--blood-deep) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 22px #ff1a1a55); }
+  background: linear-gradient(180deg, #e3262b 0%, #a50f15 48%, #7a070c 78%, #5e0408 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  /* #blood-goo (main.ts) melts the drips into the letters and adds a wet specular sheen */
+  filter: url(#blood-goo) drop-shadow(0 .03em .02em #000c) drop-shadow(0 0 24px #ff1a1a38); }
 .is-ready .blood { animation: neon 6s 1.4s infinite; }
-.drip { position: absolute; top: 80%; left: var(--x); width: .07em; height: 0; background: linear-gradient(var(--blood), var(--blood-deep)); border-radius: 0 0 6px 6px; pointer-events: none; }
-.drip::after { content: ''; position: absolute; left: 50%; bottom: -.05em; width: .13em; height: .15em; transform: translateX(-50%); border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; background: var(--blood-deep); }
-.is-dripping .drip { animation: drip var(--t, 4s) cubic-bezier(.55,0,.7,1) var(--w, 0s) forwards; }
-@keyframes drip { 0% { height: 0; } 35% { height: calc(var(--h) * .45); } 100% { height: var(--h); } }
+/* Each drip: a lump hanging off the letter, a thin viscous thread and a heavy bead at its tip */
+.drip { --s: 1; position: absolute; left: var(--x); top: 93%; pointer-events: none; width: calc(.06em * var(--s)); height: 0; transform: translateX(-50%); border-radius: 0 0 .03em .03em;
+  background: linear-gradient(90deg, #4a0205 0%, #7e090e 40%, #a3141a 55%, #5a0307 100%); }
+.drip::before, .drip::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%) scale(0); }
+.drip::before { top: -.07em; width: calc(.2em * var(--s)); height: calc(.12em * var(--s)); border-radius: 50%; background: #64050a; }
+.drip::after { bottom: calc(-.12em * var(--s)); width: calc(.13em * var(--s)); height: calc(.17em * var(--s)); border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(circle at 36% 62%, #c3232a 0 10%, #82090f 38%, #4a0205 90%); }
+.is-dripping .drip { animation: drip var(--t, 4s) cubic-bezier(.6,0,.4,1) var(--w, 0s) forwards; }
+.is-dripping .drip::before { animation: swell .9s cubic-bezier(.3,1.4,.6,1) var(--w, 0s) forwards; }
+.is-dripping .drip::after { animation: swell 1.4s cubic-bezier(.3,1.2,.6,1) calc(var(--w, 0s) + .3s) forwards; }
+@keyframes drip { 0%, 12% { height: 0; } 30% { height: calc(var(--h) * .22); } 80% { height: calc(var(--h) * .94); } 100% { height: var(--h); } }
+@keyframes swell { to { transform: translateX(-50%) scale(1); } }
 @keyframes neon { 0%, 100% { opacity: 1; } 2% { opacity: .35; } 3% { opacity: 1; } 4% { opacity: .5; } 6% { opacity: 1; } 51% { opacity: 1; } 52% { opacity: .6; } 53% { opacity: 1; } }
 
 .intro { color: var(--bone-dim); font-size: clamp(16px, 1.35vw, 19px); line-height: 1.65; margin: 0 0 34px; max-width: 34em; }
