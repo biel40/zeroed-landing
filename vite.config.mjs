@@ -7,7 +7,10 @@ export default defineConfig(({ mode }) => {
     if (env[key] !== undefined) process.env[key] = env[key];
   }
   return {
-    build: { target: 'es2022' },
+    build: {
+      target: 'es2022',
+      rollupOptions: { input: { main: 'index.html', agradecimientos: 'agradecimientos.html' } },
+    },
     plugins: [{
       name: 'local-beta-api',
       configureServer(server) {

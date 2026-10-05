@@ -174,19 +174,19 @@ h1 .line + .line > span { transition-delay: .14s; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ───────── Signup dossier ───────── */
-.signup { position: relative; padding: clamp(26px, 3vw, 42px); scroll-margin-top: 24px;
+.signup, .letter { position: relative; padding: clamp(26px, 3vw, 42px); scroll-margin-top: 24px;
   background:
     linear-gradient(180deg, #ffffff06, transparent 30%),
     repeating-linear-gradient(0deg, #ffffff03 0 2px, transparent 2px 28px),
     var(--panel);
   border: 1px solid #ece3cf26; box-shadow: 0 40px 80px -30px #000, 0 0 0 1px #000 inset, 0 0 60px -20px #c4161c55; }
-.signup::before { content: ''; position: absolute; inset: 10px; border: 1px dashed #ece3cf14; pointer-events: none; }
-.signup::after { content: ''; position: absolute; left: -1px; right: -1px; top: -1px; height: 3px; background: linear-gradient(90deg, var(--blood), var(--ember), var(--blood)); background-size: 200% 100%; animation: bar 4s linear infinite; }
+.signup::before, .letter::before { content: ''; position: absolute; inset: 10px; border: 1px dashed #ece3cf14; pointer-events: none; }
+.signup::after, .letter::after { content: ''; position: absolute; left: -1px; right: -1px; top: -1px; height: 3px; background: linear-gradient(90deg, var(--blood), var(--ember), var(--blood)); background-size: 200% 100%; animation: bar 4s linear infinite; }
 @keyframes bar { to { background-position: -200% 0; } }
 .tape { position: absolute; top: -14px; width: 92px; height: 26px; background: #d9cba366; box-shadow: 0 2px 6px #0006; }
 .tape-l { left: 18px; transform: rotate(-6deg); }
 .tape-r { right: 18px; transform: rotate(5deg); }
-.signup .eyebrow { color: var(--blood-hi); margin-bottom: 16px; font-size: 12px; }
+.signup .eyebrow, .letter .eyebrow { color: var(--blood-hi); margin-bottom: 16px; font-size: 12px; }
 h2 { font: 400 clamp(34px, 3.4vw, 50px)/1.02 var(--display); letter-spacing: .01em; text-transform: uppercase; margin: 0 0 18px; }
 h2 span { color: var(--blood); }
 .signup > p:not(.eyebrow):not(.signup-note) { font-size: 16px; line-height: 1.65; color: var(--bone-dim); max-width: 30em; }
@@ -268,9 +268,45 @@ footer a:hover { color: var(--blood-hi); }
 footer a:first-of-type { margin-left: auto; }
 footer button { background: transparent; color: inherit; font: inherit; border: 1px solid #ece3cf40; padding: 5px 10px; cursor: pointer; }
 
+/* ───────── Dedication teaser (landing) ───────── */
+.dedication { margin-top: clamp(80px, 10vw, 130px); padding: clamp(26px, 4vw, 44px) 0 0; border-top: 1px dashed #ece3cf26; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 40px; align-items: center; }
+.dedication > :not(.dedication-link) { grid-column: 1; }
+.dedication .eyebrow { margin: 0; color: var(--blood-hi); }
+.dedication h2 { margin: 0; }
+.dedication-link { grid-column: 2; grid-row: 1 / span 3; }
+.dedication p:not(.eyebrow) { margin: 0; color: var(--bone-dim); line-height: 1.6; max-width: 32em; }
+.dedication-link { font: 13px var(--type); letter-spacing: .16em; color: var(--bone); text-decoration: none; padding: 12px 16px; border: 1px solid #c4161c88; white-space: nowrap; transition: background .2s, border-color .2s; }
+.dedication-link:hover { background: #6e0a0d55; border-color: var(--blood-hi); }
+
+/* ───────── Dedication page ───────── */
+.back-link { text-decoration: none; transition: color .2s, border-color .2s; }
+.back-link:hover { color: var(--bone); border-color: #ece3cf55; }
+.thanks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: clamp(36px, 6vw, 96px); align-items: start; padding-top: clamp(48px, 9vh, 110px); }
+.thanks-head { position: sticky; top: 48px; }
+.thanks h1 { font-size: clamp(56px, 6.4vw, 112px); }
+.thanks h1 .line { overflow: visible; }
+.thanks-head .platforms { margin-top: 8px; }
+.letter { padding: clamp(28px, 4vw, 56px); }
+.letter .eyebrow { margin-bottom: 26px; }
+.letter > p:not(.eyebrow) { margin: 0 0 20px; font-size: clamp(17px, 1.3vw, 19px); line-height: 1.75; color: var(--bone-dim); }
+.letter > p.drop::first-letter { float: left; font: 400 3.4em/.85 var(--display); color: var(--blood); padding: .06em .12em 0 0; }
+.letter > p.letter-close { margin: 34px 0 0; font: 400 clamp(28px, 3vw, 44px)/1.05 var(--display); letter-spacing: .01em; text-transform: uppercase; color: var(--bone); }
+.letter-sign { display: grid; gap: 6px; margin: 34px 0 0; padding-top: 24px; border-top: 1px solid var(--line); }
+.letter-name { font: 26px/1.2 var(--type); color: var(--bone); transform: rotate(-1.5deg); transform-origin: left; }
+.letter-role { font: 12px var(--type); letter-spacing: .16em; text-transform: uppercase; color: var(--blood-hi); }
+.thanks-head > *, .letter { animation: thanks-in .9s cubic-bezier(.2,.8,.2,1) both; }
+.thanks-head > :nth-child(2) { animation-delay: .15s; }
+.thanks-head > :nth-child(3) { animation-delay: .3s; }
+.letter { animation-delay: .45s; }
+.thanks .blood { animation: neon 6s 1.4s infinite; }
+@keyframes thanks-in { from { opacity: 0; transform: translateY(24px); } }
+
 /* ───────── Responsive ───────── */
 @media (max-width: 960px) {
   .hud-round { display: none; }
+  .thanks, .dedication { grid-template-columns: 1fr; }
+  .dedication-link { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 12px; }
+  .thanks-head { position: static; }
   .cards, .step-list { grid-template-columns: 1fr; }
   .step-list li, .step-list li + li { padding: 28px 0; border-left: 0; border-bottom: 1px solid var(--line); flex-direction: row; gap: 22px; }
   .step-tally .tally { width: 70px; height: 46px; }
@@ -278,8 +314,10 @@ footer button { background: transparent; color: inherit; font: inherit; border: 
 @media (max-width: 760px) {
   .header { padding-block: 18px; }
   .wordmark { font-size: 28px; }
-  .edition { display: none; }
+  .edition:not(.back-link) { display: none; }
   .hud { gap: 16px; }
+  .thanks { padding-top: 44px; }
+  .thanks h1 { font-size: clamp(48px, 14vw, 88px); }
   .hero { grid-template-columns: 1fr; gap: 56px; padding-block: 44px 64px; }
   h1 { font-size: clamp(58px, 17vw, 96px); }
   .eyebrow { font-size: 11px; letter-spacing: .08em; }

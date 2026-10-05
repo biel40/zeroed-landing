@@ -4,6 +4,10 @@ Proyecto independiente de inscripción a la beta cerrada. No importa código del
 juego ni necesita que exista el checkout de Zeroed. Incluye HTML/CSS/TypeScript,
 Vite y una función Node para enviar las solicitudes a biel40aws@gmail.com.
 
+La página `agradecimientos.html` contiene la dedicatoria a los participantes de
+las pruebas internas y la beta cerrada; se enlaza desde el final de la landing
+y el pie de página, y comparte estilos y efecto de brasas con la portada.
+
 ## Desarrollo y validación
 
 Requiere Node 20.19+ o 22.12+.
